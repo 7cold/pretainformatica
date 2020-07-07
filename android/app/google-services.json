@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "177513002845",
+    "firebase_url": "https://pretainformatica-1c56f.firebaseio.com",
+    "project_id": "pretainformatica-1c56f",
+    "storage_bucket": "pretainformatica-1c56f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177513002845:android:f5d6520215f86cbf9c9ab4",
+        "android_client_info": {
+          "package_name": "com.cold.pretainformatica"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177513002845-g85nve09kq0ii89ilht5tq3l9r20p1r1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKX1lXelreCTYJUsDyBFqsFCXPcpzJxuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177513002845-g85nve09kq0ii89ilht5tq3l9r20p1r1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

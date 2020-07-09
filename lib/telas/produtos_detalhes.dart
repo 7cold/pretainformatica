@@ -229,9 +229,11 @@ class _ProdutosDetalhesState extends State<ProdutosDetalhes> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Container(
+                width: MediaQuery.of(context).size.width,
                 child: Text(
                   product.descricao,
                   style: fontLight16Dark,
+                  textAlign: TextAlign.left,
                 ),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pretainformatica/modelos/carrinho_modelos.dart';
 import 'package:pretainformatica/modelos/pesquisa_produtos_modelos.dart';
 import 'package:pretainformatica/widgets/categorias/item_categoria.dart';
 import 'package:pretainformatica/widgets/sistema/appBar.dart';
@@ -12,12 +13,6 @@ class CategoriasCelTela extends StatefulWidget {
 }
 
 class _CategoriasCelTelaState extends State<CategoriasCelTela> {
-  @override
-  void initState() {
-    PesquisaModelo.of(context).alterarSetor("produtos_celulares");
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -5,7 +5,6 @@ import 'package:pretainformatica/configs/fontes.dart';
 import 'package:pretainformatica/modelos/pesquisa_produtos_modelos.dart';
 import 'package:pretainformatica/telas/categorias_produtos_tela.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class ItemCategoria extends StatefulWidget {
   final DocumentSnapshot doc;

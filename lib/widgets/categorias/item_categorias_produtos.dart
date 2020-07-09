@@ -11,6 +11,7 @@ import 'package:pretainformatica/telas/carrinho_tela.dart';
 import 'package:pretainformatica/telas/principal_tela.dart';
 import 'package:pretainformatica/telas/produtos_detalhes.dart';
 import 'package:pretainformatica/widgets/sistema/nav_transition.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ItemCategoriaProdutos extends StatefulWidget {
   final ProdutoData data;
@@ -30,8 +31,6 @@ class _ItemCategoriaProdutosState extends State<ItemCategoriaProdutos> {
   final DocumentSnapshot doc;
 
   _ItemCategoriaProdutosState(this.data, this.categoria, this.doc);
-
-  bool animeAddCarrinho = false;
 
   @override
   Widget build(BuildContext context) {
@@ -131,25 +130,13 @@ class _ItemCategoriaProdutosState extends State<ItemCategoriaProdutos> {
                                 CarrinhoModelo.of(context)
                                     .addCartItem(cartProduct, data.quantidadeE);
 
-                                setState(() {
-                                  animeAddCarrinho = true;
-                                });
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    FadeRoute(page: PrincipalTela()),
+                                    (context) => false);
 
-                                Future.delayed(Duration(milliseconds: 450))
-                                    .then((_) {
-                                  setState(() {
-                                    animeAddCarrinho = false;
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        FadeRoute(page: PrincipalTela()),
-                                        (context) => false);
-
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CarrinhoTela()));
-                                  });
-                                });
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => CarrinhoTela()));
                               },
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 50),
@@ -158,17 +145,13 @@ class _ItemCategoriaProdutosState extends State<ItemCategoriaProdutos> {
                           decoration: BoxDecoration(
                             color: data.quantidadeE == 0
                                 ? CupertinoColors.destructiveRed
-                                : animeAddCarrinho == true
-                                    ? CupertinoColors.activeGreen
-                                    : Color(corDark),
+                                : Color(corDark),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Icon(
                             data.quantidadeE == 0
                                 ? CupertinoIcons.minus_circled
-                                : animeAddCarrinho == true
-                                    ? CupertinoIcons.check_mark
-                                    : Icons.add,
+                                : Icons.add,
                             color: Color(corPrincipal),
                           ),
                         ),

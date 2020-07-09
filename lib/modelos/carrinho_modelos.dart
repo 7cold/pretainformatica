@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mercadopago_sdk/mercadopago_sdk.dart';
 import 'package:pretainformatica/datas/carrinho_data.dart';
 import 'package:pretainformatica/datas/cep_data.dart';
-import 'package:pretainformatica/datas/produtos_data.dart';
 import 'package:pretainformatica/modelos/usuarios_modelos.dart';
 import 'package:scoped_model/scoped_model.dart';
 

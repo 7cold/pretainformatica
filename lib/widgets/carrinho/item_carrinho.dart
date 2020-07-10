@@ -90,7 +90,8 @@ class ItemCarrinho extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 10),
-                    Row(
+                    //categoria
+                    Column(
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -225,7 +226,7 @@ class IconCategoria extends StatelessWidget {
         ),
         SizedBox(width: 5),
         Text(
-          cartProduct.categoria,
+          cartProduct.categoria.toUpperCase(),
           style: fontBold14Dark,
         ),
       ],

@@ -11,7 +11,6 @@ import 'package:pretainformatica/telas/carrinho_tela.dart';
 import 'package:pretainformatica/telas/principal_tela.dart';
 import 'package:pretainformatica/telas/produtos_detalhes.dart';
 import 'package:pretainformatica/widgets/sistema/nav_transition.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 class ItemCategoriaProdutos extends StatefulWidget {
   final ProdutoData data;

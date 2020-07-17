@@ -79,7 +79,20 @@ class _CarrinhoFinalizarTelaState extends State<CarrinhoFinalizarTela> {
     totalMask.updateValue(total);
 
     return Scaffold(
-      appBar: appBar(context, "Finalizar Pedido", false),
+      appBar: CarrinhoModelo.of(context).carregandoEntrega == true ||
+              CarrinhoModelo.of(context).isLoading == true ||
+              UsuarioModelo.of(context).carregando == true
+          ? AppBar(
+              elevation: 0,
+              backgroundColor: Color(corDark),
+              leading: Theme(
+                  data: ThemeData(
+                      cupertinoOverrideTheme:
+                          CupertinoThemeData(brightness: Brightness.dark)),
+                  child: CupertinoActivityIndicator()),
+              automaticallyImplyLeading: false,
+            )
+          : appBar(context, "Finalizar Pedido", false),
       bottomNavigationBar: bottomAppBarCustomNav(
           context,
           CarrinhoModelo.of(context).carregandoEntrega == true ||

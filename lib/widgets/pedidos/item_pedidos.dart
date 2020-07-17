@@ -54,181 +54,220 @@ class _ItemPedidosItensState extends State<ItemPedidosItens> {
                           new MoneyMaskedTextController(leftSymbol: 'R\$ ');
                       totalMask.updateValue(snapshot.data["preco_total"]);
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            '${snapshot.data.documentID}',
-                            style: fontBold14Dark,
-                          ),
-                          SizedBox(height: 6.0),
-                          Text(
-                            '${formatDate(snapshot.data['data'].toDate(), [
-                              dd,
-                              '/',
-                              mm,
-                              '/',
-                              yyyy,
-                              ' - ',
-                              HH,
-                              ':',
-                              nn
-                            ])}',
-                            style: fontBold14Dark,
-                          ),
-                          SizedBox(height: 6.0),
-                          Text(
-                            "Descrição do pedido",
-                            style: fontBold14Dark,
-                          ),
-                          Text(
-                            _buildProductsText(snapshot.data),
-                            style: fontLight16Grey,
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Text(
-                            "Status do Pedido:",
-                            style: fontBold14Dark,
-                          ),
-                          SizedBox(
-                            height: 4.0,
-                          ),
-                          SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                _buildCircle("1", "Preparação", status, 1),
-                                Container(
-                                  height: 1.0,
-                                  width: MediaQuery.of(context).size.width / 20,
-                                  color: Colors.grey[500],
-                                ),
-                                _buildCircle("2", "Transporte", status, 2),
-                                Container(
-                                  height: 1.0,
-                                  width: MediaQuery.of(context).size.width / 20,
-                                  color: Colors.grey[500],
-                                ),
-                                _buildCircle("3", "Entrega", status, 3),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 12.0),
-                          Flex(
-                            direction: Axis.horizontal,
-                            children: <Widget>[
-                              Flexible(
-                                flex: 1,
-                                child: Container(
-                                  height: 38,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: CupertinoButton(
-                                    padding: EdgeInsets.all(0),
-                                    color: Color(corDark),
-                                    onPressed: status == 1
-                                        ? () {
-                                            showDialog(
-                                              context: context,
-                                              child: new CupertinoAlertDialog(
-                                                title: Text("Cancelar Pedido"),
-                                                content: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
-                                                        "Deseja realmente cancelar seu pedido?")),
-                                                actions: <Widget>[
-                                                  new CupertinoButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: new Text("Não"),
-                                                  ),
-                                                  new CupertinoButton(
-                                                    onPressed: () {
-                                                      model.pararPedido(
-                                                          '${snapshot.data.documentID}');
-                                                      FlutterOpenWhatsapp
-                                                          .sendSingleMessage(
-                                                        "552430653161",
-                                                        "Olá, gostaria de cancelar meu pedido:\nID: *${snapshot.data.documentID}*\nData: *${formatDate(snapshot.data['data'].toDate(), [
-                                                          dd,
-                                                          '/',
-                                                          mm,
-                                                          '/',
-                                                          yyyy,
-                                                          ' - ',
-                                                          HH,
-                                                          ':',
-                                                          nn
-                                                        ])}*\nCliente: *${snapshot.data['usuario_nome']}*\nPreço Total: *${totalMask.text}*",
-                                                      );
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: new Text("Sim"),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }
-                                        : null,
-                                    child: Text("Cancelar"),
-                                  ),
+                      return Stack(
+                        children: [
+                          Positioned(
+                            right: 10,
+                            top: 10,
+                            child: GestureDetector(
+                              onTap: () {
+                                FlutterOpenWhatsapp.sendSingleMessage(
+                                  "552430653161",
+                                  "*[DÚVIDAS]*\nOlá, tenho dúvidas/sugestões sobre meu pedido:\nID: *${snapshot.data.documentID}*\nData: *${formatDate(snapshot.data['data'].toDate(), [
+                                    dd,
+                                    '/',
+                                    mm,
+                                    '/',
+                                    yyyy,
+                                    ' - ',
+                                    HH,
+                                    ':',
+                                    nn
+                                  ])}*\nCliente: *${snapshot.data['usuario_nome']}*\nPreço Total: *${totalMask.text}*",
+                                );
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    color: CupertinoColors.activeGreen,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      Image.asset("assets/icones/whatsapp.png"),
                                 ),
                               ),
-                              SizedBox(width: 20),
-                              Flexible(
-                                flex: 1,
-                                child: Container(
-                                  height: 38,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: snapshot.data['payInfo']['id'] ==
-                                              "00000" ||
-                                          snapshot.data['payInfo']
-                                                  ['result'] ==
-                                              "canceled" ||
-                                          snapshot.data['payInfo']['id'] ==
-                                              "null" ||
-                                          snapshot.data['payInfo']['id'] == null
-                                      ? CupertinoButton(
-                                          padding: EdgeInsets.all(0),
-                                          color: CupertinoColors.activeBlue,
-                                          onPressed: status > 1 || status == 0
-                                              ? null
-                                              : () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PagamentoMPScreen(
-                                                              refIdMP: snapshot
-                                                                      .data[
-                                                                  'refIdMP'],
-                                                              docId: widget
-                                                                  .orderId),
-                                                    ),
-                                                  );
-                                                },
-                                          child: Text("Pagar"),
-                                        )
-                                      : CupertinoButton(
-                                          padding: EdgeInsets.all(0),
-                                          color: CupertinoColors.systemGreen,
-                                          onPressed: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) =>
-                                                  StatusPagamento(
-                                                payId: payIdPost,
-                                              ),
-                                            );
-                                          },
-                                          child: Text("Status"),
-                                        ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                '${snapshot.data.documentID}',
+                                style: fontBold16Dark,
+                              ),
+                              SizedBox(height: 6.0),
+                              Text(
+                                '${formatDate(snapshot.data['data'].toDate(), [
+                                  dd,
+                                  '/',
+                                  mm,
+                                  '/',
+                                  yyyy,
+                                  ' - ',
+                                  HH,
+                                  ':',
+                                  nn
+                                ])}',
+                                style: fontLight16Dark,
+                              ),
+                              SizedBox(height: 6.0),
+                              Text(
+                                "Descrição do pedido",
+                                style: fontBold14Dark,
+                              ),
+                              Text(
+                                _buildProductsText(snapshot.data),
+                                style: fontLight16Grey,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    _buildCircle("1", "Preparação", status, 1),
+                                    Container(
+                                      height: 1.0,
+                                      width: MediaQuery.of(context).size.width /
+                                          20,
+                                      color: Colors.grey[500],
+                                    ),
+                                    _buildCircle("2", "Transporte", status, 2),
+                                    Container(
+                                      height: 1.0,
+                                      width: MediaQuery.of(context).size.width /
+                                          20,
+                                      color: Colors.grey[500],
+                                    ),
+                                    _buildCircle("3", "Entrega", status, 3),
+                                  ],
                                 ),
+                              ),
+                              SizedBox(height: 12.0),
+                              Flex(
+                                direction: Axis.horizontal,
+                                children: <Widget>[
+                                  Flexible(
+                                    flex: 1,
+                                    child: Container(
+                                      height: 38,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: CupertinoButton(
+                                        padding: EdgeInsets.all(0),
+                                        color: Color(corDark),
+                                        onPressed: status == 1
+                                            ? () {
+                                                showDialog(
+                                                  context: context,
+                                                  child:
+                                                      new CupertinoAlertDialog(
+                                                    title:
+                                                        Text("Cancelar Pedido"),
+                                                    content: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                            "Deseja realmente cancelar seu pedido?")),
+                                                    actions: <Widget>[
+                                                      new CupertinoButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: new Text("Não"),
+                                                      ),
+                                                      new CupertinoButton(
+                                                        onPressed: () {
+                                                          model.pararPedido(
+                                                              '${snapshot.data.documentID}');
+                                                          FlutterOpenWhatsapp
+                                                              .sendSingleMessage(
+                                                            "552430653161",
+                                                            "*[CANCELAMENTO]*\nOlá, gostaria de cancelar meu pedido:\nID: *${snapshot.data.documentID}*\nData: *${formatDate(snapshot.data['data'].toDate(), [
+                                                              dd,
+                                                              '/',
+                                                              mm,
+                                                              '/',
+                                                              yyyy,
+                                                              ' - ',
+                                                              HH,
+                                                              ':',
+                                                              nn
+                                                            ])}*\nCliente: *${snapshot.data['usuario_nome']}*\nPreço Total: *${totalMask.text}*",
+                                                          );
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: new Text("Sim"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                            : null,
+                                        child: Text("Cancelar"),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Container(
+                                      height: 38,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: snapshot.data['payInfo']['id'] ==
+                                                  "00000" ||
+                                              snapshot.data['payInfo']
+                                                      ['result'] ==
+                                                  "canceled" ||
+                                              snapshot.data['payInfo']['id'] ==
+                                                  "null" ||
+                                              snapshot.data['payInfo']['id'] ==
+                                                  null
+                                          ? CupertinoButton(
+                                              padding: EdgeInsets.all(0),
+                                              color: CupertinoColors.activeBlue,
+                                              onPressed:
+                                                  status > 1 || status == 0
+                                                      ? null
+                                                      : () {
+                                                          Navigator.of(context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) => PagamentoMPScreen(
+                                                                  refIdMP: snapshot
+                                                                          .data[
+                                                                      'refIdMP'],
+                                                                  docId: widget
+                                                                      .orderId),
+                                                            ),
+                                                          );
+                                                        },
+                                              child: Text("Pagar"),
+                                            )
+                                          : CupertinoButton(
+                                              padding: EdgeInsets.all(0),
+                                              color:
+                                                  CupertinoColors.systemGreen,
+                                              onPressed: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      StatusPagamento(
+                                                    payId: payIdPost,
+                                                  ),
+                                                );
+                                              },
+                                              child: Text("Status"),
+                                            ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

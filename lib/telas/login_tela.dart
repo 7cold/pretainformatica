@@ -32,21 +32,23 @@ class _LoginTelaState extends State<LoginTela> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(corDark),
-        title: Text("Bem Vindo", style: fontHeavy20White),
-        actions: <Widget>[
-          CupertinoButton(
-              child: Text(
-                "Cadastro",
-                style: fontBold16White,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => CadastroTela()));
-              })
-        ],
-      ),
+      appBar: UsuarioModelo.of(context).carregando == true
+          ? null
+          : AppBar(
+              backgroundColor: Color(corDark),
+              title: Text("Bem Vindo", style: fontHeavy20White),
+              actions: <Widget>[
+                CupertinoButton(
+                    child: Text(
+                      "Cadastro",
+                      style: fontBold16White,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CadastroTela()));
+                    })
+              ],
+            ),
       backgroundColor: Color(corDark),
       body: Container(
         height: MediaQuery.of(context).size.height,

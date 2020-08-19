@@ -1,6 +1,8 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,8 +16,10 @@ import 'package:pretainformatica/widgets/sistema/appBar.dart';
 import 'package:pretainformatica/widgets/sistema/nav_transition.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'categorias_cel_tela.dart';
 import 'categorias_info_tela.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PrincipalTela extends StatefulWidget {
   @override
@@ -23,6 +27,17 @@ class PrincipalTela extends StatefulWidget {
 }
 
 class _PrincipalTelaState extends State<PrincipalTela> {
+  void _launchMapsUrl(double lat, double lon) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  GoogleMapController mapController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,6 +198,7 @@ class _PrincipalTelaState extends State<PrincipalTela> {
                                     imagem: "assets/icones/iso_pc.png",
                                     tela: CategoriasInfoTela(),
                                     color: Color.fromARGB(254, 162, 245, 255),
+                                    shadow: Color.fromARGB(254, 162, 245, 255),
                                   ),
                                 ),
                                 SizedBox(width: 15),
@@ -193,6 +209,7 @@ class _PrincipalTelaState extends State<PrincipalTela> {
                                     imagem: "assets/icones/iso_cel.png",
                                     tela: CategoriasCelTela(),
                                     color: Color.fromARGB(254, 220, 220, 255),
+                                    shadow: Color.fromARGB(254, 220, 220, 255),
                                   ),
                                 ),
                               ],
@@ -239,7 +256,141 @@ class _PrincipalTelaState extends State<PrincipalTela> {
                             },
                           ),
                         ],
-                      )
+                      ),
+
+                      //Mapa
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Localização",
+                              style: fontHeavy24Dark,
+                            ),
+                            SizedBox(height: 10),
+                            Stack(
+                              children: [
+                                SizedBox(
+                                  height: 300,
+                                  child: GoogleMap(
+                                    zoomGesturesEnabled: false,
+                                    tiltGesturesEnabled: false,
+                                    liteModeEnabled: true,
+                                    compassEnabled: false,
+                                    indoorViewEnabled: false,
+                                    mapToolbarEnabled: false,
+                                    myLocationButtonEnabled: false,
+                                    myLocationEnabled: false,
+                                    rotateGesturesEnabled: false,
+                                    buildingsEnabled: false,
+                                    scrollGesturesEnabled: false,
+                                    trafficEnabled: false,
+                                    zoomControlsEnabled: false,
+                                    onMapCreated:
+                                        (GoogleMapController controller) {
+                                      mapController = controller;
+                                    },
+                                    initialCameraPosition: CameraPosition(
+                                        target:
+                                            LatLng(-22.5108467, -43.1721746),
+                                        zoom: 11.8),
+                                    mapType: MapType.normal,
+                                    markers: {
+                                      Marker(
+                                        consumeTapEvents: true,
+                                        markerId: MarkerId("Loja 2"),
+                                        position:
+                                            LatLng(-22.476377, -43.170384),
+                                      ),
+                                      Marker(
+                                        markerId: MarkerId("Loja 1"),
+                                        position:
+                                            LatLng(-22.524497, -43.170589),
+                                      ),
+                                    },
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 5,
+                                  right: 8,
+                                  child: CupertinoButton(
+                                    child: Text(
+                                      "Loja 2",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    color: CupertinoColors.systemFill,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    onPressed: () async {
+                                      await mapController.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                        zoom: 17.5,
+                                        target: LatLng(-22.476377, -43.170384),
+                                      )));
+                                    },
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 55,
+                                  right: 8,
+                                  child: CupertinoButton(
+                                    color: CupertinoColors.systemFill,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    child: Text(
+                                      "Loja 1",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    onPressed: () async {
+                                      await mapController.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                        zoom: 17.5,
+                                        target: LatLng(-22.524497, -43.170589),
+                                      )));
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 25),
+                            Container(
+                              padding: EdgeInsets.all(0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 45,
+                              child: CupertinoButton(
+                                color: Color(corAccent),
+                                child: Text(
+                                  "Ver no Maps - Loja 1",
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                onPressed: () {
+                                  _launchMapsUrl(-22.524497, -43.170589);
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              padding: EdgeInsets.all(0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 45,
+                              child: CupertinoButton(
+                                color: Color(corAccent),
+                                child: Text(
+                                  "Ver no Maps - Loja 2",
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                onPressed: () {
+                                  _launchMapsUrl(-22.476377, -43.170384);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 );
@@ -254,9 +405,10 @@ class ItemCategoriaGeral extends StatelessWidget {
   final String imagem;
   final Widget tela;
   final Color color;
+  final Color shadow;
 
   const ItemCategoriaGeral(
-      {Key key, this.nome, this.imagem, this.tela, this.color})
+      {Key key, this.nome, this.imagem, this.tela, this.color, this.shadow})
       : super(key: key);
 
   @override
@@ -270,9 +422,9 @@ class ItemCategoriaGeral extends StatelessWidget {
       },
       child: Material(
         elevation: 8,
-        color: Colors.white,
+        color: Colors.transparent,
+        shadowColor: shadow.withAlpha(145),
         borderRadius: BorderRadius.circular(8),
-        shadowColor: Color(corCinza).withAlpha(60),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 200,
@@ -347,7 +499,7 @@ class CustomCardSugestoes extends StatelessWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: new Container(
-                    margin: EdgeInsets.fromLTRB(20, 0, 10, 50),
+                    margin: EdgeInsets.fromLTRB(20, 0, 10, 10),
                     height: 140,
                     width: 250,
                     decoration: BoxDecoration(

@@ -110,6 +110,8 @@ class CarrinhoModelo extends Model {
     final maxKm = doc.data['max_km'] as num;
     final precoKm = doc.data['preco_km'] as num;
     final precoBase = doc.data['preco_base'] as num;
+    final freteGratis = doc.data['frete_gratis'] as num;
+    final freteGratisKm = doc.data['frete_gratis_km'] as num;
 
     double dis =
         await Geolocator().distanceBetween(latStore, longStore, lat, long);
@@ -123,7 +125,10 @@ class CarrinhoModelo extends Model {
     } else {
       carregandoEntrega = false;
       notifyListeners();
-      return setShippingPrice(precoEntrega);
+      print(getProductsPrice());
+      return getProductsPrice() > freteGratis || dis < freteGratisKm
+          ? setShippingPrice(0.0)
+          : setShippingPrice(precoEntrega);
     }
   }
 

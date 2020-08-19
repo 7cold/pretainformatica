@@ -1,50 +1,47 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:mercadopago_sdk/mercadopago_sdk.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class TesteCep extends StatefulWidget {
+class MapSample extends StatefulWidget {
   @override
-  _TesteCepState createState() => _TesteCepState();
+  State<MapSample> createState() => MapSampleState();
 }
 
-var mp = MP("182247360055120", "E2Z9pSFGsFhNux9cP24RovdhL4QCuW16");
-var resultRefIdMP;
+class MapSampleState extends State<MapSample> {
+  Completer<GoogleMapController> _controller = Completer();
 
-Future<Map<String, dynamic>> preferenceGetMP() async {
-  var preference = {
-    "items": [
-      {
-        "title": "Produtos Preta Info&Cel",
-        "quantity": 1,
-        "currency_id": "BRL",
-        "unit_price": 1
-      }
-    ],
-    "payer": {
-      "email": "test_user_123456@testuser.com",
-    },
-  };
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
 
-  resultRefIdMP = await mp.createPreference(preference);
-  debugPrint(resultRefIdMP.toString());
+  static final CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
 
-  return resultRefIdMP;
-}
-
-class _TesteCepState extends State<TesteCep> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Center(
-          child: RaisedButton(
-            onPressed: () {
-              preferenceGetMP();
-            },
-            child: Text("data"),
-          ),
-        ),
+    return new Scaffold(
+      body: GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _goToTheLake,
+        label: Text('To the lake!'),
+        icon: Icon(Icons.directions_boat),
       ),
     );
+  }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

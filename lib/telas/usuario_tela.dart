@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pretainformatica/configs/cores.dart';
 import 'package:pretainformatica/configs/fontes.dart';
 import 'package:pretainformatica/modelos/usuarios_modelos.dart';
@@ -103,6 +105,7 @@ class UsuarioTela extends StatelessWidget {
                                 funcaoVer: false,
                                 rota: UsuarioMensagensTela(),
                               ),
+                              ItemMenuWpp(),
                               ItemMenu(
                                 label: "Logout",
                                 funcao: () async {
@@ -160,6 +163,45 @@ class ItemMenu extends StatelessWidget {
                     style: fontLight16Dark,
                   ),
                   Icon(CupertinoIcons.right_chevron)
+                ],
+              ),
+            ),
+            Divider()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ItemMenuWpp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FlutterOpenWhatsapp.sendSingleMessage(
+          "552430653161",
+          "*[ATENDIMENTO]*\nOlá, gostaria de ser atendido.",
+        );
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 20, 25, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Enviar uma mensagem",
+                    style: fontLight16Dark,
+                  ),
+                  Icon(
+                    FontAwesomeIcons.whatsappSquare,
+                    color: CupertinoColors.activeGreen,
+                    size: 32,
+                  )
                 ],
               ),
             ),
